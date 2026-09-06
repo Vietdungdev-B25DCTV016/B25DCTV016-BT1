@@ -1,70 +1,138 @@
-// --- Lời chào theo buổi với typing effect ---
+// ================================
+// Lời chào theo buổi (dùng Date)
+// ================================
 var greetingEl = document.getElementById("greeting");
 var now = new Date();
 var hour = now.getHours();
 var loi_chao = "";
 
 if (hour >= 5 && hour < 12) {
-    loi_chao = "☀️ Chào buổi sáng! Chúc bạn một ngày tốt lành!";
+    loi_chao = "Chào buổi sáng ☀️";
 } else if (hour >= 12 && hour < 18) {
-    loi_chao = "🌤️ Chào buổi chiều! Chúc bạn buổi chiều vui vẻ!";
+    loi_chao = "Chào buổi chiều 🌤️";
 } else {
-    loi_chao = "🌙 Chào buổi tối! Chúc bạn buổi tối an lành!";
+    loi_chao = "Chào buổi tối 🌙";
 }
 
-// Typing effect
+greetingEl.innerText = loi_chao;
+
+// ================================
+// Typing Effect
+// ================================
+var typingEl = document.getElementById("typingText");
+var phrases = [
+    "Sinh viên PTIT 🎓",
+    "Web Developer 💻",
+    "Yêu công nghệ ❤️",
+    "Luôn học hỏi 📚"
+];
+var phraseIndex = 0;
 var charIndex = 0;
-function typeGreeting() {
-    if (charIndex < loi_chao.length) {
-        greetingEl.innerText = loi_chao.substring(0, charIndex + 1);
-        charIndex++;
-        setTimeout(typeGreeting, 50);
-    }
-}
-typeGreeting();
+var isDeleting = false;
 
-// --- Đổi theme (màu nền + accent) ---
+function typeEffect() {
+    var current = phrases[phraseIndex];
+
+    if (isDeleting) {
+        typingEl.innerText = current.substring(0, charIndex - 1);
+        charIndex--;
+    } else {
+        typingEl.innerText = current.substring(0, charIndex + 1);
+        charIndex++;
+    }
+
+    var speed = isDeleting ? 30 : 60;
+
+    if (!isDeleting && charIndex === current.length) {
+        speed = 2000; // Dừng 2s trước khi xóa
+        isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        speed = 400;
+    }
+
+    setTimeout(typeEffect, speed);
+}
+
+typeEffect();
+
+// ================================
+// Đổi theme bằng addEventListener
+// ================================
 var btnChangeColor = document.getElementById("btnChangeColor");
-var themes = ["", "theme-cyber", "theme-sunset", "theme-ocean", "theme-forest"];
-var themeNames = ["Mặc định", "Cyber Neon", "Sunset Vibes", "Deep Ocean", "Forest Dream"];
+var themes = ["", "theme-emerald", "theme-rose", "theme-amber", "theme-sky"];
 var themeIndex = 0;
 
 btnChangeColor.addEventListener("click", function () {
-    // Xóa theme cũ
-    document.body.className = "";
-
-    // Chuyển theme tiếp theo
     themeIndex = (themeIndex + 1) % themes.length;
-
-    if (themes[themeIndex] !== "") {
-        document.body.className = themes[themeIndex];
-    }
-
-    // Đổi style background-color cho body
+    document.body.className = themes[themeIndex];
+    // Đổi màu nền bằng .style
     document.body.style.transition = "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)";
 });
 
-// --- Hiệu ứng xuất hiện khi scroll ---
-var cards = document.querySelectorAll(".glass-card");
+// ================================
+// Scroll Reveal Animation
+// ================================
+var sections = document.querySelectorAll(".reveal");
 
-function checkScroll() {
-    for (var i = 0; i < cards.length; i++) {
-        var rect = cards[i].getBoundingClientRect();
-        if (rect.top < window.innerHeight - 50) {
-            cards[i].style.opacity = "1";
-            cards[i].style.transform = "translateY(0)";
+function revealOnScroll() {
+    for (var i = 0; i < sections.length; i++) {
+        var rect = sections[i].getBoundingClientRect();
+        var windowHeight = window.innerHeight;
+        if (rect.top < windowHeight - 60) {
+            sections[i].classList.add("visible");
         }
     }
 }
 
-// Khởi tạo cards ẩn
-for (var i = 0; i < cards.length; i++) {
-    cards[i].style.opacity = "0";
-    cards[i].style.transform = "translateY(30px)";
-    cards[i].style.transition = "opacity 0.6s ease, transform 0.6s ease";
-    cards[i].style.transitionDelay = (i * 0.15) + "s";
+window.addEventListener("scroll", revealOnScroll);
+setTimeout(revealOnScroll, 150);
+
+// ================================
+// Skill Bars Animation
+// ================================
+var skillFills = document.querySelectorAll(".skill-fill");
+var skillsAnimated = false;
+
+function animateSkills() {
+    var skillsSection = document.getElementById("skills");
+    if (!skillsSection) return;
+    var rect = skillsSection.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 100 && !skillsAnimated) {
+        skillsAnimated = true;
+        for (var i = 0; i < skillFills.length; i++) {
+            var width = skillFills[i].getAttribute("data-width");
+            skillFills[i].style.width = width + "%";
+        }
+    }
 }
 
-window.addEventListener("scroll", checkScroll);
-// Chạy lần đầu
-setTimeout(checkScroll, 100);
+window.addEventListener("scroll", animateSkills);
+setTimeout(animateSkills, 500);
+
+// ================================
+// Active Nav Link on Scroll
+// ================================
+var navLinks = document.querySelectorAll(".nav-link");
+
+function updateActiveNav() {
+    var scrollPos = window.scrollY + 100;
+    for (var i = 0; i < navLinks.length; i++) {
+        var href = navLinks[i].getAttribute("href");
+        var target = document.querySelector(href);
+        if (target) {
+            var top = target.offsetTop;
+            var height = target.offsetHeight;
+            if (scrollPos >= top && scrollPos < top + height) {
+                // Xóa active cũ
+                for (var j = 0; j < navLinks.length; j++) {
+                    navLinks[j].classList.remove("active");
+                }
+                navLinks[i].classList.add("active");
+            }
+        }
+    }
+}
+
+window.addEventListener("scroll", updateActiveNav);

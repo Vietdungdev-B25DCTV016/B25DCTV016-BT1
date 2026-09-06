@@ -1,79 +1,137 @@
+// ================================
+// DOM Elements
+// ================================
 var display = document.getElementById("display");
 var expression = document.getElementById("expression");
-var buttons = document.querySelectorAll(".btn");
 var btnClear = document.getElementById("btnClear");
 var btnEqual = document.getElementById("btnEqual");
+var buttons = document.querySelectorAll(".btn");
 
 var currentInput = "0";
 var lastExpression = "";
 
-// Lắng nghe sự kiện click trên tất cả các nút bấm bằng addEventListener
+// ================================
+// Ripple effect (mouse position tracking)
+// ================================
+for (var i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("mousemove", function (e) {
+        var rect = this.getBoundingClientRect();
+        this.style.setProperty("--x", (e.clientX - rect.left) + "px");
+        this.style.setProperty("--y", (e.clientY - rect.top) + "px");
+    });
+}
+
+// ================================
+// Auto-resize display text
+// ================================
+function updateDisplay(text) {
+    display.innerText = text;
+    display.classList.remove("shrink");
+    if (text.length > 10) {
+        display.classList.add("shrink");
+    }
+}
+
+// ================================
+// Lắng nghe sự kiện click trên tất cả nút bằng addEventListener
+// ================================
 for (var i = 0; i < buttons.length; i++) {
     buttons[i].addEventListener("click", function () {
         var value = this.getAttribute("data-value");
 
-        // Bỏ qua nút Clear và Equal (xử lý riêng)
+        // Bỏ qua nút Clear và Equal
         if (!value) return;
 
         // Xóa trạng thái lỗi
         display.classList.remove("error");
 
-        // Nếu màn hình đang là "0" và nhập số, thay thế
+        // Khi bấm số: nối số vào màn hình hiển thị bằng .innerText
         if (currentInput === "0" && value !== "." && value !== "(" && value !== ")") {
-            // Nếu là operator thì nối vào
-            if (["+", "-", "*", "/"].indexOf(value) !== -1) {
+            if ("+-*/".indexOf(value) !== -1) {
                 currentInput = "0" + value;
             } else {
                 currentInput = value;
             }
         } else {
-            // Nối số/operator vào màn hình hiển thị bằng .innerText
             currentInput = currentInput + value;
         }
 
-        display.innerText = currentInput;
+        updateDisplay(currentInput);
     });
 }
 
+// ================================
 // Khi bấm Clear: đặt lại màn hình về giá trị 0
+// ================================
 btnClear.addEventListener("click", function () {
     currentInput = "0";
     lastExpression = "";
-    display.innerText = "0";
-    display.classList.remove("error");
+    display.classList.remove("error", "shrink");
+    updateDisplay("0");
     expression.innerText = "";
 });
 
-// Khi bấm =: tính toán biểu thức hiện có trên màn hình và hiển thị kết quả
+// ================================
+// Khi bấm =: tính toán biểu thức và hiển thị kết quả
+// ================================
 btnEqual.addEventListener("click", function () {
     try {
         var expr = currentInput;
         var result = eval(expr);
 
-        // Hiển thị biểu thức cũ ở trên
+        // Hiển thị biểu thức cũ
         lastExpression = expr + " =";
         expression.innerText = lastExpression;
 
-        // Hiển thị kết quả
-        // Làm tròn nếu số thập phân quá dài
+        // Làm tròn số thập phân
         if (result !== Math.floor(result)) {
             result = parseFloat(result.toFixed(10));
         }
 
         currentInput = String(result);
-        display.innerText = currentInput;
+        updateDisplay(currentInput);
 
-        // Animation khi hiện kết quả
-        display.style.transform = "scale(1.05)";
-        setTimeout(function () {
-            display.style.transform = "scale(1)";
-        }, 150);
+        // Pop animation
+        display.classList.remove("pop");
+        // Force reflow
+        void display.offsetWidth;
+        display.classList.add("pop");
 
     } catch (e) {
-        display.innerText = "Lỗi biểu thức";
         display.classList.add("error");
+        updateDisplay("Lỗi biểu thức");
         currentInput = "0";
         lastExpression = "";
         expression.innerText = "";
+    }
+});
+
+// ================================
+// Keyboard support
+// ================================
+document.addEventListener("keydown", function (e) {
+    var key = e.key;
+
+    if ("0123456789.+-*/()".indexOf(key) !== -1) {
+        // Simulate number/operator click
+        display.classList.remove("error");
+        if (currentInput === "0" && "0123456789".indexOf(key) !== -1) {
+            currentInput = key;
+        } else {
+            currentInput = currentInput + key;
+        }
+        updateDisplay(currentInput);
+    } else if (key === "Enter" || key === "=") {
+        e.preventDefault();
+        btnEqual.click();
+    } else if (key === "Escape" || key === "Delete") {
+        btnClear.click();
+    } else if (key === "Backspace") {
+        if (currentInput.length > 1) {
+            currentInput = currentInput.slice(0, -1);
+        } else {
+            currentInput = "0";
+        }
+        updateDisplay(currentInput);
     }
 });

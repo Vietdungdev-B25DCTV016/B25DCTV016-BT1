@@ -3,59 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Máy tính đơn giản</title>
+    <title>Calculator — B25DCTV016</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-    <!-- Animated background -->
-    <div class="bg-grid"></div>
-    <div class="glow glow-1"></div>
-    <div class="glow glow-2"></div>
+    <div class="bg-gradient"></div>
 
-    <div class="calculator">
-        <div class="calc-header">
-            <div class="dots">
-                <span class="dot red"></span>
-                <span class="dot yellow"></span>
-                <span class="dot green"></span>
+    <div class="container">
+        <div class="calculator">
+            <!-- Top bar -->
+            <div class="topbar">
+                <div class="window-dots">
+                    <span class="wdot wdot-red"></span>
+                    <span class="wdot wdot-yellow"></span>
+                    <span class="wdot wdot-green"></span>
+                </div>
+                <span class="topbar-title">Calculator</span>
+                <div class="topbar-spacer"></div>
             </div>
-            <span class="calc-title">Calculator</span>
+
+            <!-- Display -->
+            <div class="display-area">
+                <div id="expression" class="expression"></div>
+                <div id="display" class="display">0</div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="btn-grid">
+                <button class="btn fn" id="btnClear">AC</button>
+                <button class="btn fn" data-value="(">(</button>
+                <button class="btn fn" data-value=")">)</button>
+                <button class="btn op" data-value="/">÷</button>
+
+                <button class="btn num" data-value="7">7</button>
+                <button class="btn num" data-value="8">8</button>
+                <button class="btn num" data-value="9">9</button>
+                <button class="btn op" data-value="*">×</button>
+
+                <button class="btn num" data-value="4">4</button>
+                <button class="btn num" data-value="5">5</button>
+                <button class="btn num" data-value="6">6</button>
+                <button class="btn op" data-value="-">−</button>
+
+                <button class="btn num" data-value="1">1</button>
+                <button class="btn num" data-value="2">2</button>
+                <button class="btn num" data-value="3">3</button>
+                <button class="btn op" data-value="+">+</button>
+
+                <button class="btn num wide" data-value="0">0</button>
+                <button class="btn num" data-value=".">.</button>
+                <button class="btn eq" id="btnEqual">=</button>
+            </div>
         </div>
 
-        <div class="display-container">
-            <div id="expression" class="expression"></div>
-            <div id="display" class="display">0</div>
-        </div>
-
-        <div class="buttons">
-            <button class="btn clear" id="btnClear">AC</button>
-            <button class="btn special" data-value="(">(</button>
-            <button class="btn special" data-value=")">)</button>
-            <button class="btn operator" data-value="/">÷</button>
-
-            <button class="btn number" data-value="7">7</button>
-            <button class="btn number" data-value="8">8</button>
-            <button class="btn number" data-value="9">9</button>
-            <button class="btn operator" data-value="*">×</button>
-
-            <button class="btn number" data-value="4">4</button>
-            <button class="btn number" data-value="5">5</button>
-            <button class="btn number" data-value="6">6</button>
-            <button class="btn operator" data-value="-">−</button>
-
-            <button class="btn number" data-value="1">1</button>
-            <button class="btn number" data-value="2">2</button>
-            <button class="btn number" data-value="3">3</button>
-            <button class="btn operator" data-value="+">+</button>
-
-            <button class="btn number zero" data-value="0">0</button>
-            <button class="btn number" data-value=".">.</button>
-            <button class="btn equal" id="btnEqual">=</button>
-        </div>
+        <p class="credit">B25DCTV016 — PTIT &copy; 2026</p>
     </div>
-
-    <p class="credit">Made with <span class="heart">❤</span> by B25DCTV016</p>
 
     <script src="script.js"></script>
 </body>

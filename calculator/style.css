@@ -1,120 +1,103 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg: #0c0c1d;
+    --surface: rgba(255, 255, 255, 0.035);
+    --surface-2: rgba(255, 255, 255, 0.055);
+    --surface-3: rgba(255, 255, 255, 0.08);
+    --border: rgba(255, 255, 255, 0.06);
+    --primary: #6366f1;
+    --primary-glow: rgba(99, 102, 241, 0.2);
+    --accent: #06b6d4;
+    --text: #f0f0f2;
+    --text-dim: #7a7a95;
+    --danger: #f43f5e;
+    --radius: 14px;
+    --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
-    font-family: 'Space Grotesk', sans-serif;
-    background: #0a0a1a;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
     min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
-    position: relative;
 }
 
-/* === ANIMATED BACKGROUND === */
-.bg-grid {
+/* Background */
+.bg-gradient {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image:
-        linear-gradient(rgba(108, 92, 231, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(108, 92, 231, 0.03) 1px, transparent 1px);
-    background-size: 50px 50px;
-    z-index: 0;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 500px 400px at 30% 20%, rgba(99, 102, 241, 0.07), transparent),
+        radial-gradient(ellipse 400px 400px at 70% 80%, rgba(6, 182, 212, 0.05), transparent);
+    pointer-events: none;
 }
 
-.glow {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(100px);
-    z-index: 0;
-    animation: drift 8s ease-in-out infinite alternate;
-}
-
-.glow-1 {
-    width: 400px;
-    height: 400px;
-    background: rgba(108, 92, 231, 0.15);
-    top: -100px;
-    right: -100px;
-}
-
-.glow-2 {
-    width: 350px;
-    height: 350px;
-    background: rgba(0, 206, 201, 0.12);
-    bottom: -100px;
-    left: -100px;
-    animation-delay: 4s;
-}
-
-@keyframes drift {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(30px, 30px); }
-}
-
-/* === CALCULATOR === */
-.calculator {
+/* Container */
+.container {
     position: relative;
     z-index: 1;
+}
+
+/* Calculator */
+.calculator {
     width: 340px;
-    background: rgba(20, 20, 40, 0.9);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(17, 17, 35, 0.95);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid var(--border);
     border-radius: 20px;
     overflow: hidden;
     box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.5),
-        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+        0 25px 60px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.03) inset;
 }
 
-/* === WINDOW HEADER (macOS style) === */
-.calc-header {
+/* Top bar */
+.topbar {
     display: flex;
     align-items: center;
     padding: 14px 18px;
-    background: rgba(255, 255, 255, 0.03);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--border);
 }
 
-.dots {
+.window-dots {
     display: flex;
-    gap: 8px;
+    gap: 7px;
 }
 
-.dot {
+.wdot {
     width: 12px;
     height: 12px;
     border-radius: 50%;
+    transition: opacity var(--transition);
 }
 
-.dot.red { background: #ff5f57; }
-.dot.yellow { background: #febc2e; }
-.dot.green { background: #28c840; }
+.wdot-red { background: #ff5f57; }
+.wdot-yellow { background: #febc2e; }
+.wdot-green { background: #28c840; }
 
-.calc-title {
+.topbar-title {
     flex: 1;
     text-align: center;
-    color: rgba(255, 255, 255, 0.3);
-    font-size: 0.85em;
-    font-weight: 400;
-    margin-right: 44px;
+    font-size: 0.8em;
+    color: var(--text-dim);
+    font-weight: 500;
+    letter-spacing: 0.02em;
 }
 
-/* === DISPLAY === */
-.display-container {
-    padding: 25px 25px 20px;
+.topbar-spacer { width: 55px; }
+
+/* Display */
+.display-area {
+    padding: 28px 24px 22px;
     text-align: right;
-    min-height: 110px;
+    min-height: 120px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -122,176 +105,171 @@ body {
 
 .expression {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.9em;
-    color: rgba(255, 255, 255, 0.3);
-    min-height: 1.3em;
-    word-break: break-all;
+    font-size: 0.85em;
+    color: var(--text-dim);
+    min-height: 1.2em;
     margin-bottom: 8px;
+    word-break: break-all;
+    transition: color var(--transition);
 }
 
 .display {
     font-family: 'JetBrains Mono', monospace;
     font-size: 2.8em;
-    font-weight: 500;
-    color: #fff;
+    font-weight: 600;
+    color: var(--text);
     word-break: break-all;
-    transition: all 0.15s ease;
-    line-height: 1.2;
+    line-height: 1.15;
+    transition: all 0.2s ease;
+}
+
+.display.shrink {
+    font-size: 2em;
 }
 
 .display.error {
-    color: #ff5f57;
-    font-size: 1.8em;
+    color: var(--danger);
+    font-size: 1.6em;
 }
 
-/* === BUTTONS === */
-.buttons {
+/* Buttons Grid */
+.btn-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1px;
     padding: 1px;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.02);
 }
 
+/* Buttons */
 .btn {
-    padding: 22px;
-    font-size: 1.25em;
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 500;
+    position: relative;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.2em;
+    font-weight: 600;
     border: none;
     cursor: pointer;
-    transition: all 0.15s ease;
-    position: relative;
+    transition: all var(--transition);
     overflow: hidden;
-    background: rgba(30, 30, 55, 0.8);
-    color: #e0e0e0;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
+/* Ripple */
 .btn::after {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.4s, height 0.4s;
+    inset: 0;
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.12), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.4s;
 }
 
 .btn:active::after {
-    width: 200px;
-    height: 200px;
-}
-
-.btn:hover {
-    background: rgba(50, 50, 80, 0.9);
-}
-
-.btn:active {
-    transform: scale(0.95);
+    opacity: 1;
+    transition: opacity 0s;
 }
 
 /* Number buttons */
-.btn.number {
-    background: rgba(40, 40, 65, 0.9);
-    color: #fff;
-    font-weight: 600;
+.btn.num {
+    background: var(--surface-2);
+    color: var(--text);
 }
 
-.btn.number:hover {
-    background: rgba(60, 60, 90, 0.9);
+.btn.num:hover {
+    background: var(--surface-3);
 }
 
-/* Zero button - spans 2 columns */
-.btn.zero {
+.btn.num:active {
+    transform: scale(0.96);
+}
+
+/* Wide button (0) */
+.btn.wide {
     grid-column: span 2;
+}
+
+/* Function buttons (AC, brackets) */
+.btn.fn {
+    background: var(--surface);
+    color: var(--text-dim);
+}
+
+.btn.fn:hover {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+.btn.fn:active {
+    transform: scale(0.96);
+}
+
+#btnClear {
+    color: var(--danger);
+}
+
+#btnClear:hover {
+    background: rgba(244, 63, 94, 0.1);
 }
 
 /* Operator buttons */
-.btn.operator {
-    background: rgba(108, 92, 231, 0.2);
-    color: #a29bfe;
-    font-weight: 700;
-    font-size: 1.4em;
+.btn.op {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+    font-size: 1.35em;
 }
 
-.btn.operator:hover {
-    background: rgba(108, 92, 231, 0.35);
+.btn.op:hover {
+    background: rgba(99, 102, 241, 0.18);
 }
 
-.btn.operator:active {
-    background: rgba(108, 92, 231, 0.5);
-}
-
-/* Special buttons */
-.btn.special {
-    background: rgba(0, 206, 201, 0.1);
-    color: #00cec9;
-}
-
-.btn.special:hover {
-    background: rgba(0, 206, 201, 0.2);
-}
-
-/* Clear button */
-.btn.clear {
-    background: rgba(255, 95, 87, 0.15);
-    color: #ff5f57;
-    font-weight: 700;
-    font-size: 1.1em;
-}
-
-.btn.clear:hover {
-    background: rgba(255, 95, 87, 0.25);
-}
-
-.btn.clear:active {
-    background: rgba(255, 95, 87, 0.4);
+.btn.op:active {
+    transform: scale(0.96);
+    background: rgba(99, 102, 241, 0.25);
 }
 
 /* Equal button */
-.btn.equal {
-    background: linear-gradient(135deg, #6c5ce7, #00cec9);
+.btn.eq {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
     color: #fff;
-    font-weight: 700;
-    font-size: 1.5em;
+    font-size: 1.4em;
     grid-column: span 2;
 }
 
-.btn.equal:hover {
-    background: linear-gradient(135deg, #7d6ff0, #11dfda);
-    box-shadow: 0 0 25px rgba(108, 92, 231, 0.3);
+.btn.eq:hover {
+    filter: brightness(1.15);
+    box-shadow: 0 4px 20px var(--primary-glow);
 }
 
-.btn.equal:active {
-    box-shadow: 0 0 15px rgba(108, 92, 231, 0.5);
+.btn.eq:active {
+    transform: scale(0.97);
+    filter: brightness(0.95);
 }
 
-/* === CREDIT === */
+/* Credit */
 .credit {
-    position: relative;
-    z-index: 1;
-    margin-top: 25px;
-    color: rgba(255, 255, 255, 0.2);
-    font-size: 0.8em;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.75em;
+    color: var(--text-dim);
+    letter-spacing: 0.03em;
 }
 
-.heart {
-    color: #fd79a8;
-    animation: heartbeat 1.5s infinite;
-    display: inline-block;
+/* Animation for result */
+@keyframes result-pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+    100% { transform: scale(1); }
 }
 
-@keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+.display.pop {
+    animation: result-pop 0.25s ease;
 }
 
-/* === RESPONSIVE === */
+/* Responsive */
 @media (max-width: 380px) {
     .calculator { width: 95vw; }
-    .btn { padding: 18px; font-size: 1.1em; }
+    .btn { padding: 17px; font-size: 1.1em; }
     .display { font-size: 2.2em; }
 }
